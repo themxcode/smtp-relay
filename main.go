@@ -294,12 +294,12 @@ func (s *Session) handleMultipart(message *sgmail.SGMailV3, body []byte, content
 		}
 	}
 
-	// Add content (prefer HTML if available)
-	if htmlContent != "" {
-		message.AddContent(sgmail.NewContent("text/html", htmlContent))
-	}
+	// Add content - SendGrid requires text/plain BEFORE text/html
 	if textContent != "" {
 		message.AddContent(sgmail.NewContent("text/plain", textContent))
+	}
+	if htmlContent != "" {
+		message.AddContent(sgmail.NewContent("text/html", htmlContent))
 	}
 
 	if textContent == "" && htmlContent == "" {
